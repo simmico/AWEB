@@ -8,7 +8,7 @@
 
 const SITE_CONFIG = {
   recipientName: 'Aqeelah',
-  recipientTitle: 'Dr Aqeelah',
+  recipientTitle: 'Aqeelah',
   senderName: 'Rio',
   timezone: 'Africa/Johannesburg',
   unlockIso: '2026-11-23T00:00:00+02:00',
@@ -78,7 +78,7 @@ const DAILY_DROPS = [
     teaser: 'Almost midnight. Keep this tab open.',
     type: 'note',
     body:
-      'Tonight at 00:00 SAST, this countdown unlocks automatically right on your screen. Whether you stay up to watch the timer hit zero or open it first thing tomorrow morning, happy almost-birthday, Aqeelah.',
+      'Tonight at midnight, this countdown unlocks automatically right on your screen. Whether you stay up to watch the timer hit zero or open it first thing tomorrow morning, happy almost-birthday, Aqeelah.',
     signOff: 'Rio',
   },
 ];
@@ -98,10 +98,10 @@ const BIRTHDAY_HOME = {
   letterSignOff: 'Always yours, Rio',
 
   chart: {
-    heading: "Dr Aqeelah's Birthday Chart",
+    heading: "Aqeelah's Birthday Chart",
     fileCode: 'CHART NO. 23-11 | CONFIDENTIAL',
     rows: [
-      { label: 'Patient', value: 'Dr Aqeelah (Birthday Edition)' },
+      { label: 'Patient', value: 'Aqeelah (Birthday Edition)' },
       { label: 'Chief Complaint', value: 'Currently 1,400 km too far away' },
       { label: 'Vitals', value: 'Heart full, smile undefeated, coffee levels variable' },
       { label: 'Prescription', value: '1 Daily Jar pull every 24 hours, plus mandatory spoiling' },
