@@ -219,10 +219,13 @@ function renderDailyDrops() {
 
         const p = document.createElement('p');
         p.textContent = drop.body;
-        const sign = document.createElement('p');
-        sign.className = 'drop-card__signoff';
-        sign.textContent = `Signed, ${drop.signOff}`;
-        body.append(p, sign);
+        body.appendChild(p);
+        if (drop.signOff) {
+          const sign = document.createElement('p');
+          sign.className = 'drop-card__signoff';
+          sign.textContent = `With love, ${drop.signOff}`;
+          body.appendChild(sign);
+        }
 
         toggleBtn.addEventListener('click', () => {
           const next = body.hidden;
@@ -307,7 +310,7 @@ function buildBoardingPass(drop) {
       <p class="bp-back-note">${drop.body}</p>
     </div>
     <div class="bp-footer" style="margin-top: 16px;">
-      <span class="drop-card__signoff" style="color: var(--accent-rose-light);">Signed, ${drop.signOff}</span>
+      <span class="drop-card__signoff" style="color: var(--accent-rose-light);">With love, ${drop.signOff}</span>
       <button type="button" class="btn btn--secondary" data-action="flip-front">Flip Ticket Back</button>
     </div>
   `;

@@ -34,19 +34,17 @@ const DAILY_DROPS = [
     teaser: 'Day one of the countdown.',
     type: 'note',
     body:
-      'You asked for the link early, so here it is. No spoilers yet, just a little countdown to your favourite day of the year. Come back each day before midnight on the 23rd, because a new card opens every morning.',
-    signOff: 'Rio',
+      "I know things have been a little hectic for you, but don't worry love, things will get better soon and I can promise you that when you see me, you'll realise how all of this will be worth it.",
   },
   {
     date: '2026-11-19',
     dayNumber: 2,
     badge: '19 Nov',
-    title: 'A Quick Clue',
-    teaser: 'Four days left, and something playful is waiting.',
+    title: 'Patience Check',
+    teaser: 'Four days to go.',
     type: 'note',
     body:
-      'Clue for what unlocks on the 23rd: there is a puzzle made just for us, a deck of my favourite moments with you, and something you will actually be able to open every single day after your birthday.',
-    signOff: 'Rio',
+      'Four days left. Quick reminder that patience is a virtue, love, so no trying to guess what is waiting behind the timer.',
   },
   {
     date: '2026-11-20',
@@ -64,22 +62,20 @@ const DAILY_DROPS = [
     dayNumber: 4,
     badge: '21 Nov',
     title: 'Two Sleeps Left',
-    teaser: 'A tiny word from the doctor in charge.',
+    teaser: 'Your turn to be spoiled.',
     type: 'note',
     body:
-      'Two days until 23 November. Make sure you save this link somewhere easy to reach, because once your birthday arrives, one part of the site is meant to stay with you even after we are back from the 25th.',
-    signOff: 'Rio',
+      'Two sleeps left. You spend so much of your energy looking after everyone else, so consider this your official notice that it is your turn to be spoiled.',
   },
   {
     date: '2026-11-22',
     dayNumber: 5,
     badge: '22 Nov',
     title: 'Birthday Eve',
-    teaser: 'Almost midnight. Keep this tab open.',
+    teaser: 'One last sleep.',
     type: 'note',
     body:
-      'Tonight at midnight, this countdown unlocks automatically right on your screen. Whether you stay up to watch the timer hit zero or open it first thing tomorrow morning, happy almost-birthday, Aqeelah.',
-    signOff: 'Rio',
+      'Almost midnight. Whether you are staying up to watch the clock hit zero or opening this first thing in the morning, happy early birthday, love. Tomorrow is all yours.',
   },
 ];
 
