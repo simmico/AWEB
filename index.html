@@ -117,89 +117,114 @@
           <p id="home-hero-subtitle" class="hero-subtitle hero-subtitle--light"></p>
         </div>
 
-        <div class="content-stack">
-          <!-- Personal Birthday Letter -->
-          <article class="card card--letter" aria-labelledby="letter-heading">
-            <div class="card__header">
-              <span class="pill">Birthday Letter</span>
-              <h2 id="letter-heading" class="card__title"></h2>
+        <div class="subtabs" id="home-subtabs">
+          <div class="subtabs__list" role="tablist" focusgroup="tablist nomemory" aria-label="Birthday Home sections">
+            <button type="button" role="tab" id="subtab-letter" class="subtab-btn" aria-selected="true" focusgroupstart tabindex="0" data-subtab="letter">
+              Birthday Letter
+            </button>
+            <button type="button" role="tab" id="subtab-chart" class="subtab-btn" aria-selected="false" tabindex="-1" data-subtab="chart">
+              Medical File
+            </button>
+            <button type="button" role="tab" id="subtab-wordle" class="subtab-btn" aria-selected="false" tabindex="-1" data-subtab="wordle">
+              Daily Wordle
+            </button>
+            <button type="button" role="tab" id="subtab-distance" class="subtab-btn" aria-selected="false" tabindex="-1" data-subtab="distance">
+              Distance
+            </button>
+          </div>
+
+          <div class="subtabs__panels">
+            <!-- Panel 1: Personal Birthday Letter -->
+            <div role="tabpanel" id="panel-letter" aria-labelledby="subtab-letter" data-subpanel="letter" tabindex="0">
+              <article class="card card--letter" aria-labelledby="letter-heading">
+                <div class="card__header">
+                  <span class="pill">Birthday Letter</span>
+                  <h2 id="letter-heading" class="card__title"></h2>
+                </div>
+                <div id="letter-body" class="letter-body"></div>
+                <p id="letter-signoff" class="letter-signoff"></p>
+              </article>
             </div>
-            <div id="letter-body" class="letter-body"></div>
-            <p id="letter-signoff" class="letter-signoff"></p>
-          </article>
 
-          <!-- Doctor's Chart / Birthday Rx -->
-          <article class="card card--chart" aria-labelledby="chart-heading">
-            <div class="chart-top">
-              <div>
-                <span class="pill pill--champagne">Medical File</span>
-                <h2 id="chart-heading" class="card__title"></h2>
-              </div>
-              <span id="chart-code" class="chart-code"></span>
+            <!-- Panel 2: Aqeelah's Chart / Birthday Rx -->
+            <div role="tabpanel" id="panel-chart" aria-labelledby="subtab-chart" data-subpanel="chart" hidden>
+              <article class="card card--chart" aria-labelledby="chart-heading">
+                <div class="chart-top">
+                  <div>
+                    <span class="pill pill--champagne">Medical File</span>
+                    <h2 id="chart-heading" class="card__title"></h2>
+                  </div>
+                  <span id="chart-code" class="chart-code"></span>
+                </div>
+                <dl id="chart-rows" class="chart-list"></dl>
+              </article>
             </div>
-            <dl id="chart-rows" class="chart-list"></dl>
-          </article>
 
-          <!-- Two-column interactive row on wider screens -->
-          <div class="interactive-grid">
-            <!-- Custom 1-Round 5-Letter Wordle -->
-            <article class="card card--wordle" aria-labelledby="wordle-heading">
-              <div class="card__header">
-                <span class="pill">Mini Game</span>
-                <h2 id="wordle-heading" class="card__title"></h2>
-                <p id="wordle-subheading" class="card__desc"></p>
-              </div>
-
-              <div id="wordle-board" class="wordle-board" role="group" aria-label="5-letter puzzle grid"></div>
-              <p id="wordle-status" class="wordle-status" aria-live="polite"></p>
-              <div id="wordle-keyboard" class="wordle-keyboard" role="group" aria-label="On-screen keyboard"></div>
-
-              <div class="wordle-actions">
-                <button type="button" id="wordle-reset" class="btn btn--secondary" hidden>Play Again</button>
-                <button type="button" id="wordle-open-reward" class="btn btn--primary" hidden>Open Secret Note</button>
-              </div>
-            </article>
-
-            <!-- Interactive Distance Slider (1,400 km down to 0 km) -->
-            <article class="card card--distance" aria-labelledby="distance-heading">
-              <div class="card__header">
-                <span class="pill pill--champagne">CPT &rarr; JNB</span>
-                <h2 id="distance-heading" class="card__title"></h2>
-                <p id="distance-subheading" class="card__desc"></p>
-              </div>
-
-              <div class="flight-visual" aria-hidden="true">
-                <div class="flight-visual__ports">
-                  <span>CPT</span>
-                  <span>JNB</span>
+            <!-- Panel 3: Daily 5-Letter Wordle -->
+            <div role="tabpanel" id="panel-wordle" aria-labelledby="subtab-wordle" data-subpanel="wordle" hidden>
+              <article class="card card--wordle" aria-labelledby="wordle-heading">
+                <div class="card__header wordle-header">
+                  <div class="wordle-header__top">
+                    <span class="pill">Mini Game</span>
+                    <span id="wordle-date" class="wordle-date"></span>
+                  </div>
+                  <h2 id="wordle-heading" class="card__title"></h2>
+                  <p id="wordle-subheading" class="card__desc"></p>
                 </div>
-                <div class="flight-visual__track">
-                  <div id="slider-plane" class="flight-visual__plane">&#9992;</div>
-                </div>
-              </div>
 
-              <div class="slider-control">
-                <div class="slider-readout">
-                  <label for="distance-slider" class="slider-label">Remaining distance</label>
-                  <span id="distance-readout" class="slider-km">1,400 km apart</span>
-                </div>
-                <input
-                  type="range"
-                  id="distance-slider"
-                  min="0"
-                  max="1400"
-                  step="20"
-                  value="0"
-                  aria-valuetext="1,400 kilometres remaining"
-                >
-              </div>
+                <div id="wordle-board" class="wordle-board" role="group" aria-label="5-letter puzzle grid"></div>
+                <p id="wordle-status" class="wordle-status" aria-live="polite"></p>
+                <div id="wordle-keyboard" class="wordle-keyboard" role="group" aria-label="On-screen keyboard"></div>
 
-              <div id="distance-milestone" class="milestone-box" aria-live="polite">
-                <span id="milestone-badge" class="milestone-badge"></span>
-                <h3 id="milestone-title" class="milestone-title"></h3>
-                <p id="milestone-text" class="milestone-text"></p>
-              </div>
-            </article>
+                <div class="wordle-actions">
+                  <button type="button" id="wordle-reset" class="btn btn--secondary" hidden>Try Again</button>
+                  <button type="button" id="wordle-open-reward" class="btn btn--primary" hidden>Open Secret Note</button>
+                </div>
+              </article>
+            </div>
+
+            <!-- Panel 4: Interactive Distance Slider (1,400 km down to 0 km) -->
+            <div role="tabpanel" id="panel-distance" aria-labelledby="subtab-distance" data-subpanel="distance" hidden>
+              <article class="card card--distance" aria-labelledby="distance-heading">
+                <div class="card__header">
+                  <span class="pill pill--champagne">CPT &rarr; JNB</span>
+                  <h2 id="distance-heading" class="card__title"></h2>
+                  <p id="distance-subheading" class="card__desc"></p>
+                </div>
+
+                <div class="flight-visual" aria-hidden="true">
+                  <div class="flight-visual__ports">
+                    <span>CPT</span>
+                    <span>JNB</span>
+                  </div>
+                  <div class="flight-visual__track">
+                    <div id="slider-plane" class="flight-visual__plane">&#9992;</div>
+                  </div>
+                </div>
+
+                <div class="slider-control">
+                  <div class="slider-readout">
+                    <label for="distance-slider" class="slider-label">Remaining distance</label>
+                    <span id="distance-readout" class="slider-km">1,400 km apart</span>
+                  </div>
+                  <input
+                    type="range"
+                    id="distance-slider"
+                    min="0"
+                    max="1400"
+                    step="20"
+                    value="0"
+                    aria-valuetext="1,400 kilometres remaining"
+                  >
+                </div>
+
+                <div id="distance-milestone" class="milestone-box" aria-live="polite">
+                  <span id="milestone-badge" class="milestone-badge"></span>
+                  <h3 id="milestone-title" class="milestone-title"></h3>
+                  <p id="milestone-text" class="milestone-text"></p>
+                </div>
+              </article>
+            </div>
           </div>
         </div>
       </section>

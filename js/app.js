@@ -27,12 +27,14 @@
 const UNLOCK_MS = Date.parse(SITE_CONFIG.unlockIso);
 const JAR_STORAGE_KEY = 'aqeelah_daily_jar_v1';
 const BOARDING_STORAGE_KEY = 'aqeelah_boarding_checked_v1';
+const WORDLE_STORAGE_KEY = 'aqeelah_wordle_v1';
 
 const state = {
   previewMode: null,
   countdownTimer: null,
   unlockedRendered: false,
   activeView: 'home',
+  activeSubtab: 'letter',
   deckOrder: ABOUT_DECK.map((_, idx) => idx),
   deckIndex: 0,
   cardFlipped: false,
@@ -367,6 +369,7 @@ function showUnlockedSite(withCelebration) {
 
   if (!state.unlockedRendered) {
     renderBirthdayHome();
+    initHomeSubtabs();
     initWordle();
     initDistanceSlider();
     initDeck();
@@ -375,6 +378,7 @@ function showUnlockedSite(withCelebration) {
     initDialogFallbacks();
     state.unlockedRendered = true;
   } else {
+    initWordle();
     initDailyJar();
   }
 
@@ -468,10 +472,118 @@ function renderBirthdayHome() {
   });
 }
 
+function initHomeSubtabs() {
+  const root = document.getElementById('home-subtabs');
+  if (!root) return;
+
+  const tabs = Array.from(root.querySelectorAll('[role="tab"]'));
+  const panels = Array.from(root.querySelectorAll('[role="tabpanel"]'));
+
+  function selectSubtab(targetTab, focusTab = false) {
+    const key = targetTab.dataset.subtab;
+    state.activeSubtab = key;
+
+    tabs.forEach((tab) => {
+      const selected = tab === targetTab;
+      tab.setAttribute('aria-selected', String(selected));
+      tab.tabIndex = selected ? 0 : -1;
+      tab.toggleAttribute('focusgroupstart', selected);
+    });
+
+    panels.forEach((panel) => {
+      const active = panel.dataset.subpanel === key;
+      if (active) {
+        panel.hidden = false;
+        panel.tabIndex = 0;
+      } else {
+        panel.hidden = 'until-found';
+        panel.removeAttribute('tabindex');
+      }
+    });
+
+    targetTab.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+    if (focusTab) targetTab.focus();
+  }
+
+  tabs.forEach((tab, idx) => {
+    tab.addEventListener('click', () => selectSubtab(tab, false));
+
+    tab.addEventListener('keydown', (e) => {
+      let nextIdx = null;
+      if (e.key === 'ArrowRight') nextIdx = (idx + 1) % tabs.length;
+      else if (e.key === 'ArrowLeft') nextIdx = (idx - 1 + tabs.length) % tabs.length;
+      else if (e.key === 'Home') nextIdx = 0;
+      else if (e.key === 'End') nextIdx = tabs.length - 1;
+
+      if (nextIdx !== null) {
+        e.preventDefault();
+        selectSubtab(tabs[nextIdx], true);
+      }
+    });
+  });
+
+  panels.forEach((panel) => {
+    panel.addEventListener('beforematch', () => {
+      const matchingTab = tabs.find((t) => t.dataset.subtab === panel.dataset.subpanel);
+      if (matchingTab) selectSubtab(matchingTab, false);
+    });
+  });
+
+  selectSubtab(tabs[0], false);
+}
+
+let wordleControlsReady = false;
+let wordleState = {
+  dateKey: '',
+  target: 'HEART',
+  winMessage: '',
+  guesses: [],
+  currentGuess: '',
+  gameOver: false,
+  keyStates: {},
+};
+
+function getDailyWordleEntry(dateKey) {
+  const { words, startDate } = BIRTHDAY_HOME.wordle;
+  const offset = getSastDayIndex(dateKey) - getSastDayIndex(startDate);
+  const idx = ((offset % words.length) + words.length) % words.length;
+  return words[idx];
+}
+
+function readWordleStorage(dateKey, targetWord) {
+  try {
+    const raw = safeGetStorage(WORDLE_STORAGE_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw);
+    if (parsed.dateKey === dateKey && parsed.target === targetWord && Array.isArray(parsed.guesses)) {
+      return parsed;
+    }
+    return null;
+  } catch {
+    return null;
+  }
+}
+
+function saveWordleStorage() {
+  safeSetStorage(
+    WORDLE_STORAGE_KEY,
+    JSON.stringify({
+      dateKey: wordleState.dateKey,
+      target: wordleState.target,
+      guesses: wordleState.guesses,
+      gameOver: wordleState.gameOver,
+    })
+  );
+}
+
 function initWordle() {
-  const target = BIRTHDAY_HOME.wordle.secretWord.toUpperCase().slice(0, 5);
+  const todayKey = getSastDateKey();
+  const entry = getDailyWordleEntry(todayKey);
+  const target = entry.word.toUpperCase().slice(0, 5);
+
   document.getElementById('wordle-heading').textContent = BIRTHDAY_HOME.wordle.heading;
   document.getElementById('wordle-subheading').textContent = BIRTHDAY_HOME.wordle.subheading;
+  document.getElementById('wordle-date').textContent = getSastReadableDate();
 
   const boardEl = document.getElementById('wordle-board');
   const keyboardEl = document.getElementById('wordle-keyboard');
@@ -480,26 +592,21 @@ function initWordle() {
   const openRewardBtn = document.getElementById('wordle-open-reward');
   const dialog = document.getElementById('wordle-dialog');
 
-  let guesses = [];
-  let currentGuess = '';
-  let gameOver = false;
-  const keyStates = {};
-
   const rowsLayout = [
     ['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P'],
     ['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L'],
     ['ENTER', 'Z', 'X', 'C', 'V', 'B', 'N', 'M', 'DEL'],
   ];
 
-  function scoreGuess(guess) {
+  function scoreGuess(guess, answer) {
     const result = Array(5).fill('absent');
     const remainingCounts = {};
 
     for (let i = 0; i < 5; i += 1) {
-      if (guess[i] === target[i]) {
+      if (guess[i] === answer[i]) {
         result[i] = 'correct';
       } else {
-        const ch = target[i];
+        const ch = answer[i];
         remainingCounts[ch] = (remainingCounts[ch] || 0) + 1;
       }
     }
@@ -515,15 +622,30 @@ function initWordle() {
     return result;
   }
 
+  function recomputeKeyStates() {
+    const rank = { absent: 1, present: 2, correct: 3 };
+    wordleState.keyStates = {};
+    wordleState.guesses.forEach((guess) => {
+      const scores = scoreGuess(guess, wordleState.target);
+      for (let i = 0; i < 5; i += 1) {
+        const ch = guess[i];
+        const next = scores[i];
+        if (!wordleState.keyStates[ch] || rank[next] > rank[wordleState.keyStates[ch]]) {
+          wordleState.keyStates[ch] = next;
+        }
+      }
+    });
+  }
+
   function renderBoard() {
     boardEl.innerHTML = '';
     for (let r = 0; r < 6; r += 1) {
       const row = document.createElement('div');
       row.className = 'wordle-row';
 
-      const committed = guesses[r];
-      const active = r === guesses.length && !gameOver ? currentGuess : '';
-      const scores = committed ? scoreGuess(committed) : null;
+      const committed = wordleState.guesses[r];
+      const active = r === wordleState.guesses.length && !wordleState.gameOver ? wordleState.currentGuess : '';
+      const scores = committed ? scoreGuess(committed, wordleState.target) : null;
 
       for (let c = 0; c < 5; c += 1) {
         const tile = document.createElement('div');
@@ -551,10 +673,18 @@ function initWordle() {
         const btn = document.createElement('button');
         btn.type = 'button';
         btn.className = `kb-key${key.length > 1 ? ' kb-key--wide' : ''}`;
-        btn.textContent = key === 'DEL' ? 'Back' : key;
+        if (key === 'ENTER') {
+          btn.textContent = 'Go';
+          btn.setAttribute('aria-label', 'Submit guess');
+        } else if (key === 'DEL') {
+          btn.textContent = '\u232B';
+          btn.setAttribute('aria-label', 'Delete letter');
+        } else {
+          btn.textContent = key;
+        }
         btn.dataset.key = key;
-        if (keyStates[key]) {
-          btn.dataset.state = keyStates[key];
+        if (wordleState.keyStates[key]) {
+          btn.dataset.state = wordleState.keyStates[key];
         }
         btn.addEventListener('click', () => handleKey(key));
         row.appendChild(btn);
@@ -563,98 +693,119 @@ function initWordle() {
     });
   }
 
-  function updateKeyStates(guess, scores) {
-    const rank = { absent: 1, present: 2, correct: 3 };
-    for (let i = 0; i < 5; i += 1) {
-      const ch = guess[i];
-      const next = scores[i];
-      if (!keyStates[ch] || rank[next] > rank[keyStates[ch]]) {
-        keyStates[ch] = next;
-      }
-    }
-  }
-
   function openWinDialog() {
     document.getElementById('wordle-dialog-title').textContent = BIRTHDAY_HOME.wordle.winTitle;
-    document.getElementById('wordle-dialog-body').textContent = BIRTHDAY_HOME.wordle.winMessage;
+    document.getElementById('wordle-dialog-body').textContent = wordleState.winMessage;
     dialog.showModal();
   }
 
   function handleKey(key) {
-    if (gameOver) return;
+    if (wordleState.gameOver) return;
 
     if (key === 'DEL' || key === 'BACKSPACE') {
-      currentGuess = currentGuess.slice(0, -1);
+      wordleState.currentGuess = wordleState.currentGuess.slice(0, -1);
       statusEl.textContent = '';
       renderBoard();
       return;
     }
 
     if (key === 'ENTER') {
-      if (currentGuess.length < 5) {
+      if (wordleState.currentGuess.length < 5) {
         statusEl.textContent = 'Type all 5 letters first.';
         return;
       }
-      const scores = scoreGuess(currentGuess);
-      updateKeyStates(currentGuess, scores);
-      guesses.push(currentGuess);
+      wordleState.guesses.push(wordleState.currentGuess);
+      recomputeKeyStates();
 
-      if (currentGuess === target) {
-        gameOver = true;
-        statusEl.textContent = `Solved in ${guesses.length} ${guesses.length === 1 ? 'try' : 'tries'}!`;
+      if (wordleState.currentGuess === wordleState.target) {
+        wordleState.gameOver = true;
+        statusEl.textContent = `Solved in ${wordleState.guesses.length} ${wordleState.guesses.length === 1 ? 'try' : 'tries'}!`;
         openRewardBtn.hidden = false;
-        resetBtn.hidden = false;
+        resetBtn.hidden = true;
         openWinDialog();
-      } else if (guesses.length >= 6) {
-        gameOver = true;
-        statusEl.textContent = `The word was ${target}. Try another round anytime.`;
+      } else if (wordleState.guesses.length >= 6) {
+        wordleState.gameOver = true;
+        statusEl.textContent = `Today's word was ${wordleState.target}.`;
         resetBtn.hidden = false;
       } else {
         statusEl.textContent = '';
       }
 
-      currentGuess = '';
+      wordleState.currentGuess = '';
+      saveWordleStorage();
       renderBoard();
       renderKeyboard();
       return;
     }
 
-    if (/^[A-Z]$/.test(key) && currentGuess.length < 5) {
-      currentGuess += key;
+    if (/^[A-Z]$/.test(key) && wordleState.currentGuess.length < 5) {
+      wordleState.currentGuess += key;
       statusEl.textContent = '';
       renderBoard();
     }
   }
 
-  resetBtn.addEventListener('click', () => {
-    guesses = [];
-    currentGuess = '';
-    gameOver = false;
-    Object.keys(keyStates).forEach((k) => delete keyStates[k]);
-    statusEl.textContent = '';
+  const saved = readWordleStorage(todayKey, target);
+  wordleState = {
+    dateKey: todayKey,
+    target,
+    winMessage: entry.message,
+    guesses: saved ? saved.guesses : [],
+    currentGuess: '',
+    gameOver: saved ? Boolean(saved.gameOver) : false,
+    keyStates: {},
+  };
+  recomputeKeyStates();
+
+  const solved = wordleState.guesses.includes(target);
+  if (solved) {
+    statusEl.textContent = `Solved in ${wordleState.guesses.length} ${wordleState.guesses.length === 1 ? 'try' : 'tries'}!`;
+    openRewardBtn.hidden = false;
     resetBtn.hidden = true;
+  } else if (wordleState.gameOver) {
+    statusEl.textContent = `Today's word was ${target}.`;
     openRewardBtn.hidden = true;
-    renderBoard();
-    renderKeyboard();
-  });
+    resetBtn.hidden = false;
+  } else {
+    statusEl.textContent = '';
+    openRewardBtn.hidden = true;
+    resetBtn.hidden = true;
+  }
 
-  openRewardBtn.addEventListener('click', openWinDialog);
+  if (!wordleControlsReady) {
+    resetBtn.addEventListener('click', () => {
+      wordleState.guesses = [];
+      wordleState.currentGuess = '';
+      wordleState.gameOver = false;
+      wordleState.keyStates = {};
+      statusEl.textContent = '';
+      resetBtn.hidden = true;
+      openRewardBtn.hidden = true;
+      saveWordleStorage();
+      renderBoard();
+      renderKeyboard();
+    });
 
-  document.addEventListener('keydown', (e) => {
-    if (document.getElementById('birthday-site').hidden) return;
-    if (state.activeView !== 'home') return;
-    if (dialog.open) return;
-    if (e.metaKey || e.ctrlKey || e.altKey) return;
-    if (e.target && ['INPUT', 'TEXTAREA', 'SELECT'].includes(e.target.tagName)) return;
+    openRewardBtn.addEventListener('click', openWinDialog);
 
-    if (e.key === 'Backspace') {
-      handleKey('DEL');
-    } else if (e.key === 'Enter') {
-      handleKey('ENTER');
-    } else if (/^[a-zA-Z]$/.test(e.key)) {
-      handleKey(e.key.toUpperCase());
-    }
-  });
+    document.addEventListener('keydown', (e) => {
+      if (document.getElementById('birthday-site').hidden) return;
+      if (state.activeView !== 'home' || state.activeSubtab !== 'wordle') return;
+      if (dialog.open) return;
+      if (e.metaKey || e.ctrlKey || e.altKey) return;
+      if (e.target && ['INPUT', 'TEXTAREA', 'SELECT'].includes(e.target.tagName)) return;
+
+      if (e.key === 'Backspace') {
+        handleKey('DEL');
+      } else if (e.key === 'Enter') {
+        handleKey('ENTER');
+      } else if (/^[a-zA-Z]$/.test(e.key)) {
+        handleKey(e.key.toUpperCase());
+      }
+    });
+
+    wordleControlsReady = true;
+  }
 
   renderBoard();
   renderKeyboard();

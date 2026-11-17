@@ -80,8 +80,8 @@ const DAILY_DROPS = [
 ];
 
 const BIRTHDAY_HOME = {
-  eyebrow: '23 November 2026 | Happy Birthday',
-  heroTitle: 'Happy Birthday, Aqeelah',
+  eyebrow: '23 November 2026 | For Aqeelah',
+  heroTitle: 'Happy Birthday, My Love',
   heroSubtitle:
     'A quiet corner of the internet built just for you, from Cape Town to Johannesburg and every kilometre in between.',
   letterHeading: 'A Note For Your Birthday',
@@ -91,7 +91,7 @@ const BIRTHDAY_HOME = {
     'You spend so much of your life caring for everyone else, staying steady under pressure, and still somehow bringing warmth into every conversation we have. Today is about slowing down and letting yourself be celebrated properly.',
     'Take your time exploring the rest of the site: there is a puzzle made for us, a stack of my favourite photos and reasons I adore you, and a Daily Jar you can keep coming back to whenever you need a smile or a pick-me-up.',
   ],
-  letterSignOff: 'Always yours, Rio',
+  letterSignOff: 'With love, Rio',
 
   chart: {
     heading: "Aqeelah's Birthday Chart",
@@ -106,14 +106,62 @@ const BIRTHDAY_HOME = {
   },
 
   wordle: {
-    heading: 'The 5-Letter Puzzle',
-    subheading:
-      'Six tries to guess a 5-letter word that fits us. Hint: change this in data/content.js to any personal 5-letter word.',
-    // Must be exactly 5 uppercase letters A-Z.
-    secretWord: 'HEART',
+    heading: 'Daily 5-Letter Wordle',
+    subheading: "Six tries to guess today's 5-letter word. A fresh word unlocks every day at midnight.",
+    startDate: '2026-11-23',
     winTitle: 'You got it!',
-    winMessage:
-      'Sharp as ever, Doctor. Consider this your official reminder that you have my whole heart, and I cannot wait to see you in person around the 25th.',
+    words: [
+      {
+        word: 'HEART',
+        message:
+          'Sharp as ever. Consider this your official reminder that you have my whole heart, and I cannot wait to see you around the 25th.',
+      },
+      {
+        word: 'SMILE',
+        message:
+          'Your smile still ruins my focus every single time. Come back tomorrow for a new word.',
+      },
+      {
+        word: 'LATTE',
+        message:
+          'Caffeine first, conquering the rest of the day second. Hope today treats you gently, love.',
+      },
+      {
+        word: 'PLANE',
+        message:
+          'CPT to JNB cannot come fast enough. Counting down every hour until you land.',
+      },
+      {
+        word: 'LAUGH',
+        message:
+          'If you have not laughed properly today, go open the comedy jar after this.',
+      },
+      {
+        word: 'SCRUB',
+        message:
+          'Even in scrubs after a long shift, you somehow still look unbelievable to me.',
+      },
+      {
+        word: 'TRUST',
+        message:
+          'Long distance only works because of how steady and real we are together.',
+      },
+      {
+        word: 'LOVED',
+        message:
+          'Just in case you needed a quick reminder today: you are deeply, completely loved.',
+      },
+      {
+        word: 'SWEET',
+        message:
+          'Half sweet, half trouble, 100% my favourite person.',
+      },
+      {
+        word: 'PEACE',
+        message:
+          'Wishing you a calm, unhurried day with zero chaos and plenty of rest.',
+      },
+    ],
   },
 
   distance: {

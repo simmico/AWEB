@@ -393,10 +393,11 @@ input {
 
 .timer-value {
   display: block;
-  font-family: var(--font-editorial);
-  font-weight: 600;
-  font-size: clamp(2rem, 5vw, 3.1rem);
-  line-height: 1;
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: clamp(1.85rem, 4.8vw, 2.85rem);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
   font-variant-numeric: tabular-nums;
   color: var(--surface-white);
 }
@@ -861,10 +862,74 @@ input {
   gap: 22px;
 }
 
+.letter-body {
+  max-inline-size: 64ch;
+  line-height: 1.75;
+}
+
 .letter-body p {
-  margin: 0 0 14px;
+  margin: 0 0 16px;
   color: var(--text-main);
   font-size: 1.02rem;
+}
+
+/* In-page sub-tabs for Birthday Home */
+.subtabs__list {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  overflow-x: auto;
+  scroll-snap-type: inline proximity;
+  scrollbar-width: none;
+  padding-block-end: 6px;
+  margin-block-end: 18px;
+  border-block-end: 1px solid var(--border-warm);
+}
+
+.subtabs__list::-webkit-scrollbar {
+  display: none;
+}
+
+.subtab-btn {
+  position: relative;
+  flex: none;
+  scroll-snap-align: start;
+  min-block-size: 44px;
+  padding: 10px 16px;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 0.92rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.subtab-btn:hover:not([aria-selected="true"]) {
+  background: var(--surface-blush-soft);
+  color: var(--text-main);
+}
+
+.subtab-btn[aria-selected="true"] {
+  color: var(--accent-rose-deep);
+  background: var(--surface-blush-soft);
+}
+
+.subtab-btn[aria-selected="true"]::after {
+  content: "";
+  position: absolute;
+  inset: auto 10px 0;
+  border-block-end: 3px solid var(--accent-rose);
+}
+
+.subtabs__panels {
+  display: grid;
+}
+
+.subtabs__panels > [role="tabpanel"] {
+  grid-area: 1 / 1;
+  min-inline-size: 0;
 }
 
 .letter-signoff {
@@ -943,6 +1008,27 @@ input {
 }
 
 /* Wordle Puzzle */
+@media (max-width: 480px) {
+  .card--wordle {
+    padding-inline: 12px;
+  }
+}
+
+.wordle-header__top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.wordle-date {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-soft);
+  font-variant-numeric: tabular-nums;
+}
+
 .wordle-board {
   display: grid;
   gap: 7px;
@@ -1004,33 +1090,35 @@ input {
 .wordle-keyboard {
   display: grid;
   gap: 6px;
+  max-inline-size: 460px;
+  margin-inline: auto;
 }
 
 .kb-row {
   display: flex;
   justify-content: center;
-  gap: 5px;
+  gap: 4px;
 }
 
 .kb-key {
-  min-inline-size: 28px;
+  min-inline-size: 0;
   min-block-size: 44px;
-  padding: 0 8px;
-  flex: 1;
+  padding: 0 2px;
+  flex: 1 1 0;
   max-inline-size: 42px;
   border: 1px solid var(--border-warm);
   border-radius: 8px;
   background: var(--bg-cream);
   color: var(--text-main);
-  font-size: 0.82rem;
+  font-size: 0.78rem;
   font-weight: 700;
   cursor: pointer;
 }
 
 .kb-key--wide {
-  max-inline-size: 68px;
-  flex: 1.5;
-  font-size: 0.74rem;
+  flex: 1.55 1 0;
+  max-inline-size: 62px;
+  font-size: 0.8rem;
 }
 
 .kb-key[data-state="correct"] {
@@ -1116,9 +1204,10 @@ input {
 }
 
 .slider-km {
-  font-family: var(--font-editorial);
-  font-size: 1.35rem;
+  font-family: var(--font-body);
+  font-size: 1.08rem;
   font-weight: 700;
+  font-variant-numeric: tabular-nums;
   color: var(--accent-rose-deep);
 }
 
