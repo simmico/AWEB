@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en-ZA">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Something for Aqeelah | Countdown</title>
+  <meta name="description" content="A private birthday countdown and keepsake made for Dr Aqeelah.">
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles/main.css">
+</head>
+<body>
+  <a href="#main-content" class="skip-link visually-hidden">Skip to content</a>
+
+  <!-- Private Testing Bar: only shown when ?preview or ?day is present in the URL -->
+  <aside id="preview-bar" class="preview-bar" hidden aria-label="Preview controls">
+    <div class="preview-bar__inner">
+      <span class="preview-bar__label">Private Preview Mode</span>
+      <div class="preview-bar__actions">
+        <button type="button" class="preview-chip" data-preview-mode="live">Live Clock</button>
+        <button type="button" class="preview-chip" data-preview-mode="2026-11-18">18 Nov</button>
+        <button type="button" class="preview-chip" data-preview-mode="2026-11-19">19 Nov</button>
+        <button type="button" class="preview-chip" data-preview-mode="2026-11-20">20 Nov (Pass)</button>
+        <button type="button" class="preview-chip" data-preview-mode="2026-11-21">21 Nov</button>
+        <button type="button" class="preview-chip" data-preview-mode="2026-11-22">22 Nov</button>
+        <button type="button" class="preview-chip" data-preview-mode="unlocked">23 Nov (Unlocked)</button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Subtle celebration petals on midnight unlock -->
+  <div id="petal-layer" class="petal-layer" aria-hidden="true"></div>
+
+  <main id="main-content" tabindex="-1">
+    <!-- =========================================================
+         PHASE 1: COUNTDOWN & DAILY DROPS (18 NOV TO 22 NOV)
+         ========================================================= -->
+    <section id="countdown-view" class="countdown-shell">
+      <header class="countdown-hero">
+        <p class="eyebrow">For Dr Aqeelah &middot; From Rio</p>
+        <h1 class="hero-title">Something special is warming up</h1>
+        <p class="hero-subtitle">
+          A small countdown leading to 23 November at midnight (SAST). Check back each day for a new card to open while the clock ticks down.
+        </p>
+
+        <div class="timer-grid" aria-label="Countdown to 23 November 2026 midnight SAST">
+          <div class="timer-unit">
+            <span id="cd-days" class="timer-value">00</span>
+            <span class="timer-label">Days</span>
+          </div>
+          <div class="timer-unit">
+            <span id="cd-hours" class="timer-value">00</span>
+            <span class="timer-label">Hours</span>
+          </div>
+          <div class="timer-unit">
+            <span id="cd-minutes" class="timer-value">00</span>
+            <span class="timer-label">Minutes</span>
+          </div>
+          <div class="timer-unit">
+            <span id="cd-seconds" class="timer-value">00</span>
+            <span class="timer-label">Seconds</span>
+          </div>
+        </div>
+        <p id="timer-status" class="timer-status" aria-live="polite">
+          Unlocks automatically when the timer reaches 00:00:00.
+        </p>
+      </header>
+
+      <section class="drops-section" aria-labelledby="drops-heading">
+        <div class="section-head">
+          <p class="section-kicker">Daily Countdown Drops</p>
+          <h2 id="drops-heading" class="section-title">Five little steps to your birthday</h2>
+        </div>
+        <div id="drops-list" class="drops-list"></div>
+      </section>
+
+      <footer class="site-footer">
+        <p>Made with love by Rio &middot; Locked until 23 November 2026, 00:00 SAST</p>
+      </footer>
+    </section>
+
+    <!-- =========================================================
+         PHASE 2: UNLOCKED BIRTHDAY WEBSITE (23 NOV ONWARD)
+         ========================================================= -->
+    <div id="birthday-site" class="birthday-shell" hidden>
+      <header class="site-header">
+        <div class="site-header__inner">
+          <div class="brand-lockup">
+            <span class="brand-mark" aria-hidden="true">&#10022;</span>
+            <div>
+              <p class="brand-title">For Aqeelah</p>
+              <p class="brand-subtitle">23 November Edition</p>
+            </div>
+          </div>
+
+          <nav class="primary-nav" aria-label="Primary">
+            <button type="button" class="nav-btn" data-view="home" aria-current="page">
+              Birthday Home
+            </button>
+            <button type="button" class="nav-btn" data-view="about">
+              About You
+            </button>
+            <button type="button" class="nav-btn" data-view="jar">
+              The Daily Jar
+            </button>
+          </nav>
+        </div>
+      </header>
+
+      <!-- VIEW 1: BIRTHDAY HOME -->
+      <section id="view-home" class="page-view" aria-labelledby="home-hero-title">
+        <div class="editorial-hero">
+          <p id="home-eyebrow" class="eyebrow eyebrow--light"></p>
+          <h1 id="home-hero-title" class="hero-title hero-title--light"></h1>
+          <p id="home-hero-subtitle" class="hero-subtitle hero-subtitle--light"></p>
+        </div>
+
+        <div class="content-stack">
+          <!-- Personal Birthday Letter -->
+          <article class="card card--letter" aria-labelledby="letter-heading">
+            <div class="card__header">
+              <span class="pill">Birthday Letter</span>
+              <h2 id="letter-heading" class="card__title"></h2>
+            </div>
+            <div id="letter-body" class="letter-body"></div>
+            <p id="letter-signoff" class="letter-signoff"></p>
+          </article>
+
+          <!-- Doctor's Chart / Birthday Rx -->
+          <article class="card card--chart" aria-labelledby="chart-heading">
+            <div class="chart-top">
+              <div>
+                <span class="pill pill--champagne">Medical File</span>
+                <h2 id="chart-heading" class="card__title"></h2>
+              </div>
+              <span id="chart-code" class="chart-code"></span>
+            </div>
+            <dl id="chart-rows" class="chart-list"></dl>
+          </article>
+
+          <!-- Two-column interactive row on wider screens -->
+          <div class="interactive-grid">
+            <!-- Custom 1-Round 5-Letter Wordle -->
+            <article class="card card--wordle" aria-labelledby="wordle-heading">
+              <div class="card__header">
+                <span class="pill">Mini Game</span>
+                <h2 id="wordle-heading" class="card__title"></h2>
+                <p id="wordle-subheading" class="card__desc"></p>
+              </div>
+
+              <div id="wordle-board" class="wordle-board" role="group" aria-label="5-letter puzzle grid"></div>
+              <p id="wordle-status" class="wordle-status" aria-live="polite"></p>
+              <div id="wordle-keyboard" class="wordle-keyboard" role="group" aria-label="On-screen keyboard"></div>
+
+              <div class="wordle-actions">
+                <button type="button" id="wordle-reset" class="btn btn--secondary" hidden>Play Again</button>
+                <button type="button" id="wordle-open-reward" class="btn btn--primary" hidden>Open Secret Note</button>
+              </div>
+            </article>
+
+            <!-- Interactive Distance Slider (1,400 km down to 0 km) -->
+            <article class="card card--distance" aria-labelledby="distance-heading">
+              <div class="card__header">
+                <span class="pill pill--champagne">CPT &rarr; JNB</span>
+                <h2 id="distance-heading" class="card__title"></h2>
+                <p id="distance-subheading" class="card__desc"></p>
+              </div>
+
+              <div class="flight-visual" aria-hidden="true">
+                <div class="flight-visual__ports">
+                  <span>CPT</span>
+                  <span>JNB</span>
+                </div>
+                <div class="flight-visual__track">
+                  <div id="slider-plane" class="flight-visual__plane">&#9992;</div>
+                </div>
+              </div>
+
+              <div class="slider-control">
+                <div class="slider-readout">
+                  <label for="distance-slider" class="slider-label">Remaining distance</label>
+                  <span id="distance-readout" class="slider-km">1,400 km apart</span>
+                </div>
+                <input
+                  type="range"
+                  id="distance-slider"
+                  min="0"
+                  max="1400"
+                  step="20"
+                  value="0"
+                  aria-valuetext="1,400 kilometres remaining"
+                >
+              </div>
+
+              <div id="distance-milestone" class="milestone-box" aria-live="polite">
+                <span id="milestone-badge" class="milestone-badge"></span>
+                <h3 id="milestone-title" class="milestone-title"></h3>
+                <p id="milestone-text" class="milestone-text"></p>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- VIEW 2: ABOUT YOU (INTERACTIVE KEEPSAKE DECK) -->
+      <section id="view-about" class="page-view" aria-labelledby="about-heading" hidden>
+        <div class="section-intro">
+          <p class="section-kicker">What I Love About You</p>
+          <h1 id="about-heading" class="section-heading">Fourteen cards to flip through</h1>
+          <p class="section-desc">
+            A mix of my favourite photos of you and the small things you probably do not realise I notice. Tap any card to flip it over.
+          </p>
+        </div>
+
+        <div class="deck-stage">
+          <div class="deck-meta">
+            <span id="deck-counter" class="deck-counter">Card 1 of 14</span>
+            <button type="button" id="deck-shuffle" class="btn btn--ghost">Shuffle Deck</button>
+          </div>
+
+          <div class="flip-card-wrap">
+            <button
+              type="button"
+              id="keepsake-card"
+              class="keepsake-card"
+              aria-pressed="false"
+              aria-label="Flip keepsake card"
+            >
+              <span class="keepsake-card__inner">
+                <span class="keepsake-face keepsake-face--front" id="card-front"></span>
+                <span class="keepsake-face keepsake-face--back" id="card-back"></span>
+              </span>
+            </button>
+          </div>
+
+          <div class="deck-controls">
+            <button type="button" id="deck-prev" class="btn btn--secondary">Previous</button>
+            <button type="button" id="deck-flip" class="btn btn--primary">Flip Card</button>
+            <button type="button" id="deck-next" class="btn btn--secondary">Next</button>
+          </div>
+
+          <div id="deck-dots" class="deck-dots" aria-label="Card selector"></div>
+        </div>
+      </section>
+
+      <!-- VIEW 3: THE DAILY JAR -->
+      <section id="view-jar" class="page-view" aria-labelledby="jar-heading" hidden>
+        <div class="section-intro">
+          <p class="section-kicker">Bookmark This Page</p>
+          <h1 id="jar-heading" class="section-heading">The Daily Jar</h1>
+          <p class="section-desc">
+            A fresh quote every day at the top, plus two jars below. You get one jar pull per day, so choose whichever mood you need most.
+          </p>
+        </div>
+
+        <div class="content-stack">
+          <!-- Quote of the Day -->
+          <article class="card card--quote" aria-labelledby="quote-heading">
+            <div class="quote-top">
+              <span class="pill pill--champagne">Quote of the Day</span>
+              <span id="quote-date" class="quote-date"></span>
+            </div>
+            <h2 id="quote-heading" class="visually-hidden">Today's Quote</h2>
+            <blockquote id="daily-quote-text" class="daily-quote"></blockquote>
+            <p class="quote-credit">From Rio, for today</p>
+          </article>
+
+          <!-- Daily Pull Status -->
+          <div id="jar-status-banner" class="jar-status-banner" aria-live="polite"></div>
+
+          <!-- Two Mood Jars -->
+          <div class="jars-grid">
+            <button type="button" class="jar-card" data-jar-id="pickMeUp">
+              <div class="jar-illustration" aria-hidden="true">
+                <svg viewBox="0 0 120 140" class="jar-svg">
+                  <rect x="34" y="10" width="52" height="14" rx="5" fill="#B89278" />
+                  <rect x="28" y="22" width="64" height="8" rx="4" fill="#EFE5DE" stroke="#B89278" stroke-width="2" />
+                  <path d="M26 36 C26 30, 94 30, 94 36 L98 118 C98 128, 90 134, 80 134 L40 134 C30 134, 22 128, 22 118 Z" fill="#FFFFFF" stroke="#DFBFC4" stroke-width="2.5" />
+                  <rect x="36" y="72" width="48" height="32" rx="8" fill="#F5E6E8" stroke="#C87D87" stroke-width="1.5" />
+                  <path d="M40 58 L54 48 L62 62 L46 66 Z" fill="#E4B5BC" opacity="0.85" />
+                  <path d="M66 50 L82 44 L86 58 L70 62 Z" fill="#EFE5DE" stroke="#B89278" stroke-width="1" />
+                  <path d="M38 112 L52 106 L58 120 L42 124 Z" fill="#EED4D8" />
+                  <path d="M64 110 L80 108 L82 122 L66 124 Z" fill="#E4B5BC" opacity="0.75" />
+                </svg>
+              </div>
+              <span class="pill">Comfort Jar</span>
+              <h2 class="jar-card__title">Pick Me Up</h2>
+              <p class="jar-card__desc">For sad days, tired hospital shifts, or when you need a gentle reminder.</p>
+              <span class="jar-card__cta" data-jar-cta="pickMeUp">Pull Today's Note</span>
+            </button>
+
+            <button type="button" class="jar-card" data-jar-id="laughter">
+              <div class="jar-illustration" aria-hidden="true">
+                <svg viewBox="0 0 120 140" class="jar-svg">
+                  <rect x="34" y="10" width="52" height="14" rx="5" fill="#C87D87" />
+                  <rect x="28" y="22" width="64" height="8" rx="4" fill="#F5E6E8" stroke="#C87D87" stroke-width="2" />
+                  <path d="M26 36 C26 30, 94 30, 94 36 L98 118 C98 128, 90 134, 80 134 L40 134 C30 134, 22 128, 22 118 Z" fill="#FFFFFF" stroke="#EADCD9" stroke-width="2.5" />
+                  <rect x="36" y="72" width="48" height="32" rx="8" fill="#EFE5DE" stroke="#B89278" stroke-width="1.5" />
+                  <path d="M40 54 L56 46 L60 60 L44 64 Z" fill="#EFE5DE" stroke="#B89278" stroke-width="1" />
+                  <path d="M64 48 L80 54 L76 66 L60 60 Z" fill="#E4B5BC" opacity="0.85" />
+                  <path d="M40 112 L56 108 L60 122 L44 124 Z" fill="#F5E6E8" />
+                  <path d="M66 108 L82 112 L78 124 L62 120 Z" fill="#EFE5DE" />
+                </svg>
+              </div>
+              <span class="pill pill--champagne">Comedy Jar</span>
+              <h2 class="jar-card__title">Doctor's Orders: Laughter</h2>
+              <p class="jar-card__desc">Because laughter is the best medicine (even if you pretend my jokes are terrible).</p>
+              <span class="jar-card__cta" data-jar-cta="laughter">Pull Today's Note</span>
+            </button>
+          </div>
+
+          <!-- Revealed Note Card -->
+          <article id="jar-reveal-card" class="card card--revealed-note" hidden aria-live="polite">
+            <div class="card__header">
+              <span id="revealed-jar-badge" class="pill"></span>
+              <span id="revealed-jar-date" class="quote-date"></span>
+            </div>
+            <p id="revealed-jar-text" class="revealed-note-text"></p>
+            <p class="revealed-note-signoff">Signed, Rio</p>
+          </article>
+        </div>
+      </section>
+
+      <footer class="site-footer">
+        <p>Made for Dr Aqeelah by Rio &middot; 23 November 2026</p>
+      </footer>
+    </div>
+  </main>
+
+  <!-- Accessible Native Modal for Wordle Secret Note -->
+  <dialog id="wordle-dialog" closedby="any" aria-labelledby="wordle-dialog-title">
+    <div class="dialog-box">
+      <span class="pill">Puzzle Solved</span>
+      <h2 id="wordle-dialog-title" class="dialog-title"></h2>
+      <p id="wordle-dialog-body" class="dialog-body"></p>
+      <form method="dialog" class="dialog-actions">
+        <button type="submit" class="btn btn--primary" autofocus>Keep Exploring</button>
+      </form>
+    </div>
+  </dialog>
+
+  <script defer src="data/content.js"></script>
+  <script defer src="js/app.js"></script>
+</body>
+</html>
