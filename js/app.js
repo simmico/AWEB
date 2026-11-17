@@ -193,7 +193,7 @@ function renderDailyDrops() {
 
     const title = document.createElement('h3');
     title.className = 'drop-card__title';
-    title.textContent = isOpen ? drop.title : `Locked Surprise (${drop.badge})`;
+    title.textContent = isOpen ? drop.title : 'Locked Surprise';
 
     const teaser = document.createElement('p');
     teaser.className = 'drop-card__teaser';
