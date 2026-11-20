@@ -502,6 +502,7 @@ input {
 }
 
 .boarding-pass {
+  display: grid;
   position: relative;
   border-radius: var(--radius-lg);
   transform-style: preserve-3d;
@@ -509,7 +510,7 @@ input {
 
 @media (prefers-reduced-motion: no-preference) {
   .boarding-pass {
-    transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+    transition: transform 0.65s cubic-bezier(0.22, 1, 0.36, 1);
   }
 }
 
@@ -518,20 +519,21 @@ input {
 }
 
 .boarding-pass__face {
+  grid-area: 1 / 1;
+  -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
   border-radius: var(--radius-lg);
   border: 1px solid var(--border-rose);
-  overflow: hidden;
+  overflow: clip;
   box-shadow: var(--shadow-soft);
 }
 
 .boarding-pass__front {
   background: var(--surface-white);
+  transform: rotateY(0deg);
 }
 
 .boarding-pass__back {
-  position: absolute;
-  inset: 0;
   transform: rotateY(180deg);
   background: var(--bg-espresso);
   color: var(--surface-white);
@@ -541,17 +543,44 @@ input {
   justify-content: space-between;
 }
 
+.boarding-pass:not(.is-flipped) .boarding-pass__front {
+  visibility: visible;
+  pointer-events: auto;
+  z-index: 2;
+}
+
+.boarding-pass:not(.is-flipped) .boarding-pass__back {
+  visibility: hidden;
+  pointer-events: none;
+  z-index: 1;
+  transition: visibility 0s linear 0.28s;
+}
+
+.boarding-pass.is-flipped .boarding-pass__front {
+  visibility: hidden;
+  pointer-events: none;
+  z-index: 1;
+  transition: visibility 0s linear 0.28s;
+}
+
+.boarding-pass.is-flipped .boarding-pass__back {
+  visibility: visible;
+  pointer-events: auto;
+  z-index: 2;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .boarding-pass.is-flipped {
     transform: none;
   }
   .boarding-pass.is-flipped .boarding-pass__front {
     display: none;
+    transition: none;
   }
   .boarding-pass__back {
-    position: static;
     transform: none;
     display: none;
+    transition: none;
   }
   .boarding-pass.is-flipped .boarding-pass__back {
     display: flex;
@@ -718,6 +747,8 @@ input {
 .bp-flight-anim__plane {
   position: relative;
   z-index: 1;
+  display: block;
+  inline-size: 100%;
   font-size: 1.25rem;
   color: var(--accent-rose-light);
   transform: translateX(0);
@@ -731,7 +762,7 @@ input {
 
 @media (prefers-reduced-motion: reduce) {
   .boarding-pass.is-flipped .bp-flight-anim__plane {
-    margin-inline-start: auto;
+    text-align: end;
   }
 }
 
@@ -740,7 +771,7 @@ input {
     transform: translateX(0);
   }
   to {
-    transform: translateX(calc(100% + 160px));
+    transform: translateX(calc(100% - 1.5rem));
   }
 }
 
@@ -1384,6 +1415,7 @@ input[type="range"]:focus-visible {
 .keepsake-face {
   position: absolute;
   inset: 0;
+  -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
   border-radius: var(--radius-lg);
   border: 1px solid var(--border-warm);
@@ -1395,12 +1427,38 @@ input[type="range"]:focus-visible {
   justify-content: space-between;
 }
 
+.keepsake-face--front {
+  transform: rotateY(0deg);
+}
+
 .keepsake-face--back {
   transform: rotateY(180deg);
   background: var(--bg-espresso);
   color: var(--surface-white);
   border-color: rgba(223, 191, 196, 0.25);
   padding: 28px;
+}
+
+.keepsake-card:not(.is-flipped) .keepsake-face--front {
+  visibility: visible;
+  z-index: 2;
+}
+
+.keepsake-card:not(.is-flipped) .keepsake-face--back {
+  visibility: hidden;
+  z-index: 1;
+  transition: visibility 0s linear 0.28s;
+}
+
+.keepsake-card.is-flipped .keepsake-face--front {
+  visibility: hidden;
+  z-index: 1;
+  transition: visibility 0s linear 0.28s;
+}
+
+.keepsake-card.is-flipped .keepsake-face--back {
+  visibility: visible;
+  z-index: 2;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -1423,18 +1481,25 @@ input[type="range"]:focus-visible {
 
 .keepsake-photo-box {
   inline-size: 100%;
-  aspect-ratio: 4 / 4.2;
+  flex: 1;
+  min-block-size: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
   border-radius: var(--radius-md);
   overflow: hidden;
-  background: var(--surface-blush-soft);
+  background: var(--bg-cream);
   border: 1px solid var(--border-warm);
 }
 
 .keepsake-photo-box img {
-  inline-size: 100%;
-  block-size: 100%;
-  object-fit: cover;
-  object-position: center 22%;
+  max-inline-size: 100%;
+  max-block-size: 100%;
+  inline-size: auto;
+  block-size: auto;
+  object-fit: contain;
+  border-radius: var(--radius-sm);
 }
 
 .keepsake-text-front {
